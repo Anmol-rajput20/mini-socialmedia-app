@@ -6,10 +6,10 @@ const Feed = ({ posts, toggleLike, addComment }) => {
     <div>
       {posts.map((post) => (
         <PostCard
-          key={post.id}
+          key={post._id}
           post={post}
           toggleLike={toggleLike}
-          addComment={addComment}   // ✅ ADD THIS LINE
+          addComment={addComment} 
         />
       ))}
     </div>

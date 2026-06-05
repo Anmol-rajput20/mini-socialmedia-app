@@ -4,18 +4,20 @@ import ImageIcon from "@mui/icons-material/Image";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 
 const CreatePost = ({ createPost}) => {
-  const [image,setImage] = useState(null);
   const [text, setText] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
   const handlePost = () => {
-    if (!text.trim() && !image) return;
+    if (!text.trim() && !imagePreview) return;
 
     createPost({
       text : text.trim(),
-      image,
-    })
+      image : imagePreview || "",
+    });
     setText("");
-    setImage(null);
+    setImageFile(null);
+    setImagePreview("");
   };
 
   return (
@@ -65,12 +67,18 @@ const CreatePost = ({ createPost}) => {
         accept="image/*"
         id="imageInput"
         hidden
-        onChange={(e) => setImage(e.target.files[0])}
+        onChange={(e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          setImageFile(file);
+          setImagePreview(URL.createObjectURL(file));
+        }}
       />
 
-      {image && (
+      {imagePreview && (
         <img
-          src={URL.createObjectURL(image)}
+          src={imagePreview}
           alt="preview"
           style={{
             width:"100px",
@@ -107,7 +115,7 @@ const CreatePost = ({ createPost}) => {
         <Button
           variant="contained"
           onClick={handlePost}
-          disabled={!text.trim() && !image}
+          disabled={!text.trim() && !imagePreview}
           style={{
             borderRadius: "20px",
             padding: "6px 22px",

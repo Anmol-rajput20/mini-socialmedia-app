@@ -4,67 +4,63 @@ import SearchBar from "../components/SearchBar";
 import CreatePost from "../components/CreatePost";
 import Filters from "../components/Filters";
 import Feed from "../components/Feed";
+import {useEffect} from "react";
+import API from "../api";
 
 const Home = () => {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      username: "Anmol",
-      content: "Welcome to my social app 🚀",
-      likes: [],
-      comments: [],
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
+
+  const fetchPosts = async () => {
+    try{
+      const res = await API.get("/posts");
+      setPosts(res.data);
+    }catch(err){
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   // LIKE TOGGLE (add/remove username)
-  const toggleLike = (postId, username) => {
-    setPosts((prev) =>
-      prev.map((post) => {
-        if (post.id === postId) {
-          const alreadyLiked = post.likes.includes(username);
-
-          return {
-            ...post,
-            likes: alreadyLiked
-              ? post.likes.filter((u) => u !== username)
-              : [...post.likes, username],
-          };
-        }
-        return post;
-      })
-    );
+  const toggleLike = async (postId) => {
+    try{
+      await API.put(`/posts/like/${postId}`, {
+        username:"You",
+      });
+      fetchPosts();
+    } catch(err) {
+      console.log(err);
+    }
+    
   };
 
   // ADD COMMENT
-  const addComment = (postId, username, text) => {
-    setPosts((prev) =>
-      prev.map((post) => {
-        if (post.id === postId) {
-          return {
-            ...post,
-            comments: [
-              ...post.comments,
-              { username, text },
-            ],
-          };
-        }
-        return post;
-      })
-    );
+  const addComment = async (postId, text) => {
+    try{
+      await API.put(`/posts/comment/${postId}`, {
+        username : "You",
+        text,
+      });
+      fetchPosts();
+    } catch(err) {
+      console.log(err);
+    }
   };
 
   // CREATE POST
-  const createPost = (data) => {
-    const newPost = {
-      id: Date.now(),
-      username: "You",
-      content: data.text,
-      image: data.image ? URL.createObjectURL(data.image) : null,
-      likes: [],
-      comments: [],
-    };
-
-    setPosts((prev) => [newPost, ...prev]);
+  const createPost = async (data) => {
+    try{
+      await API.post("/posts", {
+        username: "You",
+        content: data.text,
+        image: data.image || "",
+      });
+      fetchPosts();
+    } catch(err) {
+      console.log(err);
+    }
   };
 
   return (

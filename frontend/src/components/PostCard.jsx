@@ -89,7 +89,7 @@ const PostCard = ({ post, toggleLike, addComment }) => {
         {/* LIKE */}
         <Stack direction="row" spacing={1} alignItems="center">
           <IconButton
-            onClick={() => toggleLike(post.id, "You")}
+            onClick={() => toggleLike(post._id, "You")}
           >
             {isLiked ? (
               <FavoriteIcon style={{ color: "red" }} />
@@ -136,7 +136,7 @@ const PostCard = ({ post, toggleLike, addComment }) => {
               onClick={() => {
                 if (!commentText.trim()) return;
 
-                addComment(post.id, "You", commentText);
+                addComment(post._id, "You", commentText);
                 setCommentText("");
               }}
               style={{
