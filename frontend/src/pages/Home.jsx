@@ -6,10 +6,13 @@ import Filters from "../components/Filters";
 import Feed from "../components/Feed";
 import {useEffect} from "react";
 import API from "../api";
+import {Navigate} from "react-router-dom";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user"));
 
+ 
   const fetchPosts = async () => {
     try{
       const res = await API.get("/posts");
@@ -22,6 +25,13 @@ const Home = () => {
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  const token = localStorage.getItem("token");
+
+  if(!token) {
+    return <Navigate to="/login" />;
+  }
+
 
   // LIKE TOGGLE (add/remove username)
   const toggleLike = async (postId) => {
@@ -37,10 +47,10 @@ const Home = () => {
   };
 
   // ADD COMMENT
-  const addComment = async (postId, text) => {
+  const addComment = async (postId, username, text) => {
     try{
       await API.put(`/posts/comment/${postId}`, {
-        username : "You",
+        username,
         text,
       });
       fetchPosts();
@@ -53,7 +63,7 @@ const Home = () => {
   const createPost = async (data) => {
     try{
       await API.post("/posts", {
-        username: "You",
+        username: user?.username,
         content: data.text,
         image: data.image || "",
       });

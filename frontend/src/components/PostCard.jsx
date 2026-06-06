@@ -12,10 +12,11 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 
 const PostCard = ({ post, toggleLike, addComment }) => {
+  const user = JSON.parse(localStorage.getItem("user")) || {};
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
 
-  const isLiked = post.likes.includes("You");
+  const isLiked = post.likes.includes(user?.username);
 
   return (
     <Card
@@ -89,7 +90,7 @@ const PostCard = ({ post, toggleLike, addComment }) => {
         {/* LIKE */}
         <Stack direction="row" spacing={1} alignItems="center">
           <IconButton
-            onClick={() => toggleLike(post._id, "You")}
+            onClick={() => toggleLike(post._id, user?.username)}
           >
             {isLiked ? (
               <FavoriteIcon style={{ color: "red" }} />
@@ -136,7 +137,7 @@ const PostCard = ({ post, toggleLike, addComment }) => {
               onClick={() => {
                 if (!commentText.trim()) return;
 
-                addComment(post._id, "You", commentText);
+                addComment(post._id,user?.username, commentText);
                 setCommentText("");
               }}
               style={{
@@ -153,10 +154,10 @@ const PostCard = ({ post, toggleLike, addComment }) => {
 
           {/* COMMENT LIST */}
           <div style={{ marginTop: "10px" }}>
-            {post.comments.map((c, i) => (
-              <div key={i} style={{ fontSize: "13px", marginTop: "5px" }}>
-                <b>{c.username}:</b> {c.text}
-              </div>
+            {post.comments.map((comment, index) => (
+              <Typography key={index} style={{marginTop: "6px"}}>
+                <strong>{comment.username}:</strong> {comment.text}
+              </Typography>
             ))}
           </div>
         </div>

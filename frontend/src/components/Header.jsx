@@ -1,7 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    window.location.href = "/login";
+  }
   return (
+    
     <div
       style={{
         display: "flex",
@@ -13,6 +22,7 @@ const Header = () => {
       }}
     >
       <h2 style={{ margin: 0 }}>Social</h2>
+      <h3>Welcome, {user?.username}</h3>
 
       <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
         <div>🔔</div>
@@ -25,8 +35,15 @@ const Header = () => {
             background: "#ccc",
           }}
         ></div>
+
+        <Link to="/profile">
+           <button>Profile</button>
+        </Link>
+        <button onClick={handleLogout}> Logout </button>
       </div>
     </div>
+    
+
   );
 };
 

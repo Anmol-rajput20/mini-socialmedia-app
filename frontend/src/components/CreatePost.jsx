@@ -4,6 +4,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 
 const CreatePost = ({ createPost}) => {
+  const user = JSON.parse(localStorage.getItem("user"));
   const [text, setText] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
@@ -12,6 +13,7 @@ const CreatePost = ({ createPost}) => {
     if (!text.trim() && !imagePreview) return;
 
     createPost({
+      username : user?.username,
       text : text.trim(),
       image : imagePreview || "",
     });
