@@ -10,13 +10,18 @@ const CreatePost = ({ createPost}) => {
   const [imagePreview, setImagePreview] = useState("");
 
   const handlePost = () => {
-    if (!text.trim() && !imagePreview) return;
+    if (!text.trim() && !imageFile) return;
 
-    createPost({
-      username : user?.username,
-      text : text.trim(),
-      image : imagePreview || "",
-    });
+    const formData = new FormData();
+
+    formData.append("username",user?.username);
+    formData.append("content",text.trim());
+    if(imageFile) {
+      formData.append("image",imageFile);
+    }
+
+    createPost(formData);
+    
     setText("");
     setImageFile(null);
     setImagePreview("");

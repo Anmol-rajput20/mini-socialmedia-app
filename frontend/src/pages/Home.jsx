@@ -37,7 +37,7 @@ const Home = () => {
   const toggleLike = async (postId) => {
     try{
       await API.put(`/posts/like/${postId}`, {
-        username:"You",
+        username:user?.username,
       });
       fetchPosts();
     } catch(err) {
@@ -60,18 +60,18 @@ const Home = () => {
   };
 
   // CREATE POST
-  const createPost = async (data) => {
-    try{
-      await API.post("/posts", {
-        username: user?.username,
-        content: data.text,
-        image: data.image || "",
+  const createPost = async (formData) => {
+    try {
+      await API.post("/posts",formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
       fetchPosts();
     } catch(err) {
       console.log(err);
     }
-  };
+  }
 
   return (
     <div style={{ background: "#f4f6f8", minHeight: "100vh" }}>

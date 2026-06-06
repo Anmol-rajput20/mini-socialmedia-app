@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
+const upload = require("../middleware/upload");
 
 // GET all posts
 router.get("/", async (req, res) => {
@@ -9,19 +10,31 @@ router.get("/", async (req, res) => {
 });
 
 // CREATE post
-router.post("/", async (req, res) => {
-  const { username, content, image } = req.body;
+router.post("/", upload.single("image"), async (req, res) => {
+  try {
+    const { username, content } = req.body;
 
-  const newPost = new Post({
-    username: username || "You",
-    content: content || "",
-    image: image || "",
-    likes: [],
-    comments: [],
-  });
+    const image = req.file
+      ? `/uploads/${req.file.filename}`
+      : "";
 
-  const saved = await newPost.save();
-  res.status(201).json(saved);
+    const newPost = new Post({
+      username: username || "You",
+      content: content || "",
+      image,
+      likes: [],
+      comments: [],
+    });
+
+    const saved = await newPost.save();
+
+    res.status(201).json(saved);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: err.message,
+    });
+  }
 });
 
 

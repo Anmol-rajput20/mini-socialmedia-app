@@ -74,7 +74,7 @@ const PostCard = ({ post, toggleLike, addComment }) => {
       {/* IMAGE */}
       {post.image && (
         <img
-          src={post.image}
+          src={`http://localhost:5000${post.image}`}
           alt="post"
           style={{
             width: "100%",

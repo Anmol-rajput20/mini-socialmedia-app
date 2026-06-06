@@ -9,6 +9,19 @@ const Header = () => {
 
     window.location.href = "/login";
   }
+
+  const styles = {
+  profileBtn: {
+    padding: "8px 14px",
+    borderRadius: "20px",
+    border: "1px solid #1976d2",
+    background: "white",
+    color: "#1976d2",
+    fontWeight: "bold",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  }
+};
   return (
     
     <div
@@ -36,10 +49,10 @@ const Header = () => {
           }}
         ></div>
 
-        <Link to="/profile">
-           <button>Profile</button>
+        <Link to="/profile" style={{textDecoration:"none"}}>
+           <button style={styles.profileBtn}>Profile</button>
         </Link>
-        <button onClick={handleLogout}> Logout </button>
+        <button style={styles.profileBtn} onClick={handleLogout}> Logout </button>
       </div>
     </div>
     
